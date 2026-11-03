@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /recipes/{recipeId} {
+      function isAuthenticated() {
+        return request.auth != null;
+      }
+
+      function isValidRecipe(data) {
+        return data.userId == request.auth.uid
+          && data.name is string
+          && data.name.trim().size() > 0
+          && data.name.size() <= 80
+          && data.category in ['Breakfast', 'Lunch', 'Dinner', 'Dessert']
+          && data.difficulty in ['Easy', 'Medium', 'Hard']
+          && data.cookTime is int
+          && data.cookTime >= 1
+          && data.cookTime <= 600
+          && (!('servings' in data) || data.servings == null || (data.servings is int && data.servings >= 1 && data.servings <= 20))
+          && (!('notes' in data) || data.notes == null || (data.notes is string && data.notes.size() <= 300))
+          && (!('favorite' in data) || data.favorite is bool);
+      }
+
+      // Document ID must equal userId + '_' + lowercase trimmed name
+      // This enforces case-insensitive unique names per user:
+      // two recipes with the same name (any case) produce the same doc ID,
+      // so Firestore naturally prevents duplicates.
+      function hasValidDocId(data) {
+        return recipeId == request.auth.uid + '_' + data.name.trim().lower();
+      }
+
+      // Logged-in user can read only their own recipes
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+
+      // Logged-in user can create a recipe if data is valid and doc ID matches the naming convention
+      allow create: if isAuthenticated()
+        && isValidRecipe(request.resource.data)
+        && hasValidDocId(request.resource.data);
+
+      // Logged-in user can update only their own recipes; userId cannot change
+      allow update: if isAuthenticated()
+        && resource.data.userId == request.auth.uid
+        && isValidRecipe(request.resource.data)
+        && request.resource.data.userId == resource.data.userId
+        && hasValidDocId(request.resource.data);
+
+      // Logged-in user can delete only their own recipes
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "647054908760",
+    "project_id": "bookshelf-prm393-a61c8",
+    "storage_bucket": "bookshelf-prm393-a61c8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:647054908760:android:b9c533615220f5150f992d",
+        "android_client_info": {
+          "package_name": "com.example.bookshelf"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVFjIq3VxxFvlny0JNujw8F5TlD-1EMik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:647054908760:android:4212b3e1c0c3c1f20f992d",
+        "android_client_info": {
+          "package_name": "com.recipebox.recipe_box"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVFjIq3VxxFvlny0JNujw8F5TlD-1EMik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
